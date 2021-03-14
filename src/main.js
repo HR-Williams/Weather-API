@@ -11,9 +11,14 @@ $(document).ready(function() {
   $('#weatherLocation').click(function() {
     const city = $('#location').val();
     $('#location').val("");
+    const zipCode = $('#zip').val();
+    $('#zip').val("");
 
     let request = new XMLHttpRequest();
     const url = `http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${process.env.API_KEY}`;
+
+    let zipRequest = new XMLHttpRequest();
+    const zipUrl = `http://api.openweathermap.org/data/2.5/weather?zip=${zipCode}&appid=${process.env.API_KEY}`;
 
     request.onreadystatechange = function() {
       if (this.readyState === 4 && this.status === 200) {
@@ -22,8 +27,18 @@ $(document).ready(function() {
       }
     }
 
+    zipRequest.onreadystatechange = function() {
+      if (this.readyState === 4 && this.status === 200) {
+        const response = JSON.parse(this.responseText);
+        getElements(response);
+      }
+    }
+
     request.open("GET", url, true);
     request.send();
+
+    zipRequest.open("GET", zipUrl, true);
+    zipRequest.send();
     
 
    function getElements(response) {
